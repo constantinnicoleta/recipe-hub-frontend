@@ -3,5 +3,34 @@
     min-height: 100vh;
 }
 
+.Main {
+    padding-top: 81px;
+}
+
+* {
+    box-sizing: border-box;
+}
+  
+a {
+    color: #616161;
+    transition: color ease-in-out 0.3s;
+}
+  
+a:hover {
+    text-decoration: none;
+}
+  
+a:hover i {
+    color: #114ce1;
+    transition: color ease-in-out 0.3s;
+}
+  
+i {
+    color: #0a8bae;
+    font-size: 1.6rem;
+    padding: 7px;
+    vertical-align: middle;
+}
+  
 
   

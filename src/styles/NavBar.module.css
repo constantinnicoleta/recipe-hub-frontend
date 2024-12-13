@@ -1,39 +1,28 @@
 .NavBar {
-    background-color: #f4b785;
+    background-color: #efb6e0;
 }
 
 .navbar-brand img {
     height: 60px;
 }
 
-* {
-    box-sizing: border-box;
-}
-  
-a {
+.NavLink {
+    padding: 5px;
     color: #616161;
-    transition: color ease-in-out 0.3s;
-}
-  
-a:hover {
     text-decoration: none;
+    transition: color ease-in-out 0.3s;
 }
-  
-a:hover i {
+
+.NavLink:hover {
     color: #ec8038;
-    transition: color ease-in-out 0.3s;
+}
+
+.Active {
+    color: #ec950a;
+    font-weight: bold;
 }
   
-i {
-    color: #674065;
-    font-size: 1.6rem;
-    padding: 7px;
-    vertical-align: middle;
-}
-  
-i:hover {
-    cursor: pointer;
-    transition: color ease-in-out 0.3s;
-    color: #2142b2;
+.Active i {
+    color: #eba638;
 }
   
