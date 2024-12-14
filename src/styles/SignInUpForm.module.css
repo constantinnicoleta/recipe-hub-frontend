@@ -1,0 +1,85 @@
+/* General Row Styling */
+.Row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container for the Form Content */
+.Content {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 400px;
+}
+
+/* Header (Sign Up) Styling */
+.Header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Input Fields Styling */
+.Input {
+  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.Input:focus {
+  border-color: #2142b2;
+  box-shadow: 0 0 5px rgba(33, 66, 178, 0.3);
+  outline: none;
+}
+
+/* Link Styling */
+.Link {
+  font-size: 0.9rem;
+  color: #2142b2;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+.Link span {
+  font-weight: bold;
+}
+
+.Link:hover {
+  text-decoration: underline;
+  color: #0d3dab;
+}
+
+/* Image Section Styling */
+.SignUpCol {
+  text-align: center;
+}
+
+.FillerImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .Content {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .Header {
+    font-size: 1.5rem;
+  }
+}

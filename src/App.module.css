@@ -7,6 +7,19 @@
     padding-top: 81px;
 }
 
+.Content {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 2px;
+    border: 1px solid #dadadf;
+  }
+
+.FillerImage {
+    width: 350px;
+    height: auto;
+    object-fit: cover;
+}
+
 * {
     box-sizing: border-box;
 }
