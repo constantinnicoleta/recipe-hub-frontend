@@ -1,24 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
 import { axiosReq } from "../api/axiosDefaults";
 import { useAuth } from "../context/AuthContext";
-import { useHistory } from "react-router-dom";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 
-const CreateRecipePage = () => {
-    const currentUser = useAuth();
+const EditRecipePage = () => {
+    const { id } = useParams();
     const history = useHistory();
+    const currentUser = useAuth();
 
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         ingredients: "",
         instructions: "",
-        image: null,
         category: "",
+        image: null,
     });
 
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
+    const [isAuthor, setIsAuthor] = useState(false);
+
+    useEffect(() => {
+        const fetchRecipe = async () => {
+            try {
+                const response = await axiosReq.get(`api/recipes/${id}/`);
+                setFormData(response.data);
+                setIsAuthor(response.data.author === currentUser?.username);
+            } catch (error) {
+                setError("Recipe not found or you do not have permission to edit.");
+            }
+        };
+
+        fetchRecipe();
+    }, [id, currentUser]);
 
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -33,8 +49,8 @@ const CreateRecipePage = () => {
         setError(null);
         setSuccessMessage(null);
 
-        if (!currentUser) {
-            setError("You must be logged in to create a recipe.");
+        if (!isAuthor) {
+            setError("You do not have permission to edit this recipe.");
             return;
         }
 
@@ -44,22 +60,21 @@ const CreateRecipePage = () => {
         });
 
         try {
-            await axiosReq.post("api/recipes/", formDataToSend, {
+            await axiosReq.patch(`/recipes/${id}/`, formDataToSend, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-            setSuccessMessage("Recipe created successfully!");
-            setTimeout(() => history.push("/recipes"), 2000);
+            setSuccessMessage("Recipe updated successfully!");
+            setTimeout(() => history.push(`/recipes/${id}`), 2000);
         } catch (error) {
-            console.error("Error creating recipe:", error);
-            setError("Failed to create recipe. Please check your inputs.");
+            setError("Failed to update recipe. Please check your inputs.");
         }
     };
 
     return (
         <Container className="mt-4">
-            <h1>Create a Recipe</h1>
-            {error && <Alert variant="danger">{error}</Alert>}
+            <h1>Edit Recipe</h1>
             {successMessage && <Alert variant="success">{successMessage}</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>}
 
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
@@ -73,29 +88,14 @@ const CreateRecipePage = () => {
                 </Form.Group>
 
                 <Form.Group>
-                    <Form.Label>Ingredients</Form.Label>
-                    <Form.Control as="textarea" name="ingredients" value={formData.ingredients} onChange={handleChange} required />
-                </Form.Group>
-
-                <Form.Group>
-                    <Form.Label>Instructions</Form.Label>
-                    <Form.Control as="textarea" name="instructions" value={formData.instructions} onChange={handleChange} required />
-                </Form.Group>
-
-                <Form.Group>
-                    <Form.Label>Category</Form.Label>
-                    <Form.Control type="text" name="category" value={formData.category} onChange={handleChange} required />
-                </Form.Group>
-
-                <Form.Group>
                     <Form.Label>Image</Form.Label>
                     <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
                 </Form.Group>
 
-                <Button type="submit" className="mt-3">Create Recipe</Button>
+                <Button type="submit" className="mt-3" disabled={!isAuthor}>Update Recipe</Button>
             </Form>
         </Container>
     );
 };
 
-export default CreateRecipePage;
+export default EditRecipePage;

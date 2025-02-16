@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import React from "react";
+import { useAuth } from "../context/AuthContext";
 
 const DashboardPage = () => {
-    const { user } = useContext(AuthContext);
+    const currentUser = useAuth();
 
     return (
         <div>
             <h1>Welcome to Your Dashboard!</h1>
-            {user ? <h2>Hello, {user.username}!</h2> : <p>You are not logged in.</p>}
+            {currentUser ? <h2>Hello, {currentUser.username}!</h2> : <p>You are not logged in.</p>}
         </div>
     );
 };

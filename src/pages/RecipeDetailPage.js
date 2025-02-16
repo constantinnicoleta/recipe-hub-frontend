@@ -1,29 +1,27 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import axiosInstance from "../api/axiosDefaults";
-import AuthContext from "../context/AuthContext";
+import { axiosReq } from "../api/axiosDefaults";
+import { useAuth } from "../context/AuthContext";
 import { Container, Card, Button } from "react-bootstrap";
 import styles from "../styles/RecipeDetailPage.module.css";
 
 const RecipeDetailPage = () => {
     const { id } = useParams();
     const history = useHistory();
-    const { isAuthenticated, username } = useContext(AuthContext);
+    const currentUser = useAuth();
     const [recipe, setRecipe] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log("Fetching recipe with ID:", id);
         const fetchRecipe = async () => {
             try {
-                const response = await axiosInstance.get(`api/recipes/${id}/`);
+                const response = await axiosReq.get(`api/recipes/${id}/`);
                 setRecipe(response.data);
             } catch (error) {
-                console.error("Error fetching recipe:", error);
                 setError("Recipe not found.");
             }
         };
-    
+
         fetchRecipe();
     }, [id]);
 
@@ -31,11 +29,10 @@ const RecipeDetailPage = () => {
         if (!window.confirm("Are you sure you want to delete this recipe?")) return;
 
         try {
-            await axiosInstance.delete(`/recipes/${id}/`);
+            await axiosReq.delete(`/recipes/${id}/`);
             alert("Recipe deleted successfully!");
             history.push("/recipes");
         } catch (error) {
-            console.error("Error deleting recipe:", error);
             setError("Failed to delete recipe.");
         }
     };
@@ -53,7 +50,7 @@ const RecipeDetailPage = () => {
                     <Card.Text><strong>Ingredients:</strong> {recipe.ingredients}</Card.Text>
                     <Card.Text><strong>Instructions:</strong> {recipe.instructions}</Card.Text>
 
-                    {isAuthenticated && recipe.author === username && (
+                    {currentUser?.username?.toLowerCase() === recipe.author?.toLowerCase() && (
                         <div className={styles.buttonGroup}>
                             <Button variant="warning" onClick={() => history.push(`/recipes/${id}/edit`)}>Edit</Button>
                             <Button variant="danger" onClick={handleDelete}>Delete</Button>

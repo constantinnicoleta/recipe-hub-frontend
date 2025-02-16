@@ -1,25 +1,25 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const HomePage = () => {
-  const { isAuthenticated } = useContext(AuthContext);
-  const history = useHistory();
+    const currentUser = useAuth();
+    const history = useHistory();
 
-  return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      {isAuthenticated ? (
-        <h1> You are logged in. 🎉</h1>
-      ) : (
-        <>
-          <h1>Welcome to Recipe Hub! 🍽️</h1>
-          <p>Discover and share amazing recipes!</p>
-          <button onClick={() => history.push("/signin")}>Log In</button>
-          <button onClick={() => history.push("/signup")}>Sign Up</button>
-        </>
-      )}
-    </div>
-  );
+    return (
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+            {currentUser ? (
+                <h1>You are logged in. 🎉</h1>
+            ) : (
+                <>
+                    <h1>Welcome to Recipe Hub! 🍽️</h1>
+                    <p>Discover and share amazing recipes!</p>
+                    <button onClick={() => history.push("/signin")}>Log In</button>
+                    <button onClick={() => history.push("/signup")}>Sign Up</button>
+                </>
+            )}
+        </div>
+    );
 };
 
 export default HomePage;

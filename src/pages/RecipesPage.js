@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../api/axiosDefaults";
+import { axiosReq } from "../api/axiosDefaults";
 import { Link } from "react-router-dom";
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
 import styles from "../styles/RecipesPage.module.css";
@@ -10,7 +10,7 @@ const RecipesPage = () => {
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await axiosInstance.get("api/recipes/");
+                const response = await axiosReq.get("api/recipes/");
                 setRecipes(response.data);
             } catch (error) {
                 console.error("Error fetching recipes:", error);
@@ -21,7 +21,7 @@ const RecipesPage = () => {
     }, []);
 
     return (
-        <Container className={styles.centeredContainer}> 
+        <Container className={styles.centeredContainer}>
             <h1 className={styles.pageTitle}>All Recipes</h1>
 
             <div className={styles.buttonContainer}>

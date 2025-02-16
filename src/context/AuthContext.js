@@ -1,57 +1,54 @@
-import { createContext, useState, useEffect } from "react";
-import { checkUserStatus, logoutUser } from "../api/auth";
-import axiosInstance from "../api/axiosDefaults";
+import { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
+const SetAuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+export const useSetAuth = () => useContext(SetAuthContext);
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [username, setUsername] = useState(null);
+    const [auth, setAuth] = useState(() => {
+        const storedUser = localStorage.getItem("user");
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
 
     useEffect(() => {
-        const verifyUser = async () => {
-          try {
-            axiosInstance.defaults.withCredentials = true;
-            const response = await checkUserStatus();
-            console.log("User status response:", response);
-      
-            if (response.is_logged_in) {
-              setIsAuthenticated(true);
-              setUsername(response.user.username);
-            } else {
-              setIsAuthenticated(false);
-              setUsername(null);
+        const refreshToken = async () => {
+            try {
+                const refresh = localStorage.getItem("refresh_token");
+                if (!refresh) return;
+
+                const { data } = await axios.post("/auth/token/refresh/", { refresh });
+
+
+                localStorage.setItem("access_token", data.access);
+                axios.defaults.headers["Authorization"] = `Bearer ${data.access}`;
+
+                const userResponse = await axios.get("/auth/user/", {
+                    headers: { Authorization: `Bearer ${data.access}` },
+                });
+
+                setAuth(userResponse.data);
+                localStorage.setItem("user", JSON.stringify(userResponse.data));
+
+            } catch (error) {
+                console.error("Token refresh failed:", error);
+                setAuth(null);
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+                localStorage.removeItem("user");
             }
-          } catch (error) {
-            console.error("Error checking user status:", error);
-            setIsAuthenticated(false);
-            setUsername(null);
-          }
         };
-      
-        verifyUser();
+
+        refreshToken();
     }, []);
 
-    const login = (username) => {
-        setIsAuthenticated(true);
-        setUsername(username);
-    };
-
-    const logout = async () => {
-        try {
-            await logoutUser();
-            setIsAuthenticated(false);
-            setUsername(null);
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
-    };
-
     return (
-        <AuthContext.Provider value={{ isAuthenticated, username, login, logout }}>
-            {children}
+        <AuthContext.Provider value={auth}>
+            <SetAuthContext.Provider value={setAuth}>
+                {children}
+            </SetAuthContext.Provider>
         </AuthContext.Provider>
     );
 };
-
-export default AuthContext;
