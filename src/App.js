@@ -8,6 +8,9 @@ import { AuthProvider } from './context/AuthContext';
 import HomePage from "./pages/HomePage";
 import LoginForm from "./pages/auth/LoginForm";
 import DashboardPage from "./pages/DashboardPage";
+import RecipesPage from "./pages/RecipesPage";
+import RecipeDetailPage from "./pages/RecipeDetailPage";
+
 
 function App() {
   return (
@@ -19,7 +22,8 @@ function App() {
             <Switch>
               <Route exact path="/" component={HomePage} /> 
               <Route exact path="/dashboard" component={DashboardPage} />
-              <Route exact path="/recipes" component={() => <h1>Recipes</h1>} />
+              <Route exact path="/recipes" component={RecipesPage} />
+              <Route exact path="/recipes/:id" component={RecipeDetailPage} />
               <Route exact path="/categories" component={() => <h1>Categories</h1>} />
               <Route exact path="/signin" component={LoginForm} />
               <Route exact path="/signup" component={SignUpForm} />

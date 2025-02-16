@@ -1,0 +1,28 @@
+.centeredContainer {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.pageTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.buttonContainer {
+    margin-bottom: 20px;
+}
+
+.noRecipesText {
+    font-size: 1.2rem;
+    color: #777;
+}
+
+.recipeCard {
+    transition: transform 0.2s;
+}
+
+.recipeCard:hover {
+    transform: scale(1.03);
+}
