@@ -1,28 +1,89 @@
 .centeredContainer {
-    text-align: center;
-    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30px;
+    width: 100%;
 }
 
 .pageTitle {
     font-size: 2rem;
     font-weight: bold;
-    color: #333;
+    text-align: center;
     margin-bottom: 20px;
 }
 
 .buttonContainer {
+    text-align: center;
     margin-bottom: 20px;
 }
 
-.noRecipesText {
-    font-size: 1.2rem;
-    color: #777;
+.createButton {
+    background-color: #f8a8c7;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+
+.createButton:hover {
+    background-color: #f497b2;
+}
+
+.recipesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
 }
 
 .recipeCard {
-    transition: transform 0.2s;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    text-align: center;
+    width: 300px;
+    transition: transform 0.2s ease-in-out;
 }
 
 .recipeCard:hover {
     transform: scale(1.03);
+}
+
+.recipeTitle {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.recipeDescription {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.recipeButton {
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
+    font-weight: bold;
+    background-color: #f8a8c7;
+    color: white;
+}
+
+.recipeButton:hover {
+    background-color: #f497b2;
 }

@@ -1,49 +1,89 @@
 import React, { useEffect, useState } from "react";
 import { axiosReq } from "../api/axiosDefaults";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
+import { useAuth } from "../context/AuthContext";
 import styles from "../styles/RecipesPage.module.css";
 
 const RecipesPage = () => {
     const [recipes, setRecipes] = useState([]);
+    const currentUser = useAuth();
+    const history = useHistory();
 
     useEffect(() => {
-        const fetchRecipes = async () => {
+        const fetchMyRecipes = async () => {
             try {
-                const response = await axiosReq.get("api/recipes/");
-                setRecipes(response.data);
+                if (currentUser) {
+                    // ✅ Fetch only recipes created by logged-in user
+                    const response = await axiosReq.get(`/api/recipes/?author=${currentUser.username}`);
+                    setRecipes(response.data);
+                }
             } catch (error) {
-                console.error("Error fetching recipes:", error);
+                console.error("Error fetching my recipes:", error);
             }
         };
 
-        fetchRecipes();
-    }, []);
+        if (currentUser) {
+            fetchMyRecipes();
+        }
+    }, [currentUser]);
+
+    // ✅ Function to delete a recipe
+    const handleDelete = async (recipeId) => {
+        if (!window.confirm("Are you sure you want to delete this recipe?")) return;
+
+        try {
+            await axiosReq.delete(`/api/recipes/${recipeId}/`);
+            // ✅ Remove the deleted recipe from state without refresh
+            setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== recipeId));
+        } catch (error) {
+            console.error("Error deleting recipe:", error);
+            alert("Failed to delete recipe.");
+        }
+    };
 
     return (
         <Container className={styles.centeredContainer}>
-            <h1 className={styles.pageTitle}>All Recipes</h1>
+            <h1 className={styles.pageTitle}>My Recipes</h1>
 
             <div className={styles.buttonContainer}>
                 <Link to="/recipes/create">
-                    <Button variant="success">Create New Recipe</Button>
+                    <Button variant="success" className={styles.createButton}>
+                        Create New Recipe
+                    </Button>
                 </Link>
             </div>
 
             {recipes.length === 0 ? (
-                <p className={styles.noRecipesText}>No recipes found.</p>
+                <p className={styles.noRecipesText}>You haven't created any recipes yet.</p>
             ) : (
-                <Row>
+                <Row className={styles.recipesContainer}>
                     {recipes.map((recipe) => (
-                        <Col key={recipe.id} md={4} className="mb-4">
+                        <Col key={recipe.id} md={6} lg={4} className="mb-4">
                             <Card className={styles.recipeCard}>
-                                {recipe.image && <Card.Img variant="top" src={recipe.image} alt={recipe.title} />}
                                 <Card.Body>
-                                    <Card.Title>{recipe.title}</Card.Title>
-                                    <Card.Text>{recipe.description}</Card.Text>
-                                    <Link to={`/recipes/${recipe.id}`}>
-                                        <Button variant="primary">View Recipe</Button>
-                                    </Link>
+                                    <Card.Title className={styles.recipeTitle}>{recipe.title}</Card.Title>
+                                    <Card.Text className={styles.recipeDescription}>{recipe.description}</Card.Text>
+
+                                    <div className={styles.buttonGroup}>
+                                        <Link to={`/recipes/${recipe.id}`}>
+                                            <Button variant="primary" className={styles.recipeButton}>View</Button>
+                                        </Link>
+                                        <Button 
+                                            variant="warning"
+                                            className={styles.recipeButton}
+                                            onClick={() => history.push(`/recipes/${recipe.id}/edit`)}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button 
+                                            variant="danger"
+                                            className={styles.recipeButton}
+                                            onClick={() => handleDelete(recipe.id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </div>
                                 </Card.Body>
                             </Card>
                         </Col>

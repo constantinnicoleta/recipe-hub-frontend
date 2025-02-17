@@ -1,99 +1,157 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { axiosReq } from "../api/axiosDefaults";
 import { useAuth } from "../context/AuthContext";
-import { useHistory } from "react-router-dom";
-import { Form, Button, Container, Alert } from "react-bootstrap";
+import { Form, Button, Container, Card, Alert } from "react-bootstrap";
+import styles from "../styles/EditRecipePage.module.css"; // ✅ Keep same styling as Edit Recipe
 
 const CreateRecipePage = () => {
     const currentUser = useAuth();
     const history = useHistory();
+    const [categories, setCategories] = useState([]); // ✅ Store available categories
 
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         ingredients: "",
         instructions: "",
-        image: null,
-        category: "",
+        category: "", // ✅ Stores selected category
     });
 
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
-    const handleChange = (event) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value });
-    };
+    // ✅ Redirect unauthenticated users
+    useEffect(() => {
+        if (!currentUser) {
+            history.push("/signin");
+        }
+    }, [currentUser, history]);
 
-    const handleFileChange = (event) => {
-        setFormData({ ...formData, image: event.target.files[0] });
+    // ✅ Fetch available categories
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axiosReq.get("/api/categories/");
+                setCategories(response.data);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        
+        if (name === "category") {
+            setFormData({ ...formData, [name]: Number(value) }); // 🔥 Ensure category is an ID
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError(null);
         setSuccessMessage(null);
-
-        if (!currentUser) {
-            setError("You must be logged in to create a recipe.");
-            return;
-        }
-
-        const formDataToSend = new FormData();
-        Object.keys(formData).forEach((key) => {
-            formDataToSend.append(key, formData[key]);
-        });
-
+    
         try {
-            await axiosReq.post("api/recipes/", formDataToSend, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            const formDataToSend = {
+                ...formData,
+                category: parseInt(formData.category),  // ✅ Ensure category is sent as an ID
+            };
+    
+            await axiosReq.post("/api/recipes/", formDataToSend);
             setSuccessMessage("Recipe created successfully!");
-            setTimeout(() => history.push("/recipes"), 2000);
+            setTimeout(() => history.push("/recipes"), 2000); // ✅ Redirect to all recipes
         } catch (error) {
-            console.error("Error creating recipe:", error);
             setError("Failed to create recipe. Please check your inputs.");
         }
     };
 
     return (
-        <Container className="mt-4">
-            <h1>Create a Recipe</h1>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {successMessage && <Alert variant="success">{successMessage}</Alert>}
+        <Container className={styles.centeredContainer}> 
+            <Card className={styles.editCard}> {/* ✅ Using the same card style as Edit Recipe */}
+                <Card.Body>
+                    <h2 className={styles.title}>Create New Recipe</h2>
+                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                    {error && <Alert variant="danger">{error}</Alert>}
 
-            <Form onSubmit={handleSubmit}>
-                <Form.Group>
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control type="text" name="title" value={formData.title} onChange={handleChange} required />
-                </Form.Group>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="title" 
+                                value={formData.title} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control type="text" name="description" value={formData.description} onChange={handleChange} required />
-                </Form.Group>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows={3} 
+                                name="description" 
+                                value={formData.description} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Ingredients</Form.Label>
-                    <Form.Control as="textarea" name="ingredients" value={formData.ingredients} onChange={handleChange} required />
-                </Form.Group>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Ingredients</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows={4} 
+                                name="ingredients" 
+                                value={formData.ingredients} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Instructions</Form.Label>
-                    <Form.Control as="textarea" name="instructions" value={formData.instructions} onChange={handleChange} required />
-                </Form.Group>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Instructions</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows={4} 
+                                name="instructions" 
+                                value={formData.instructions} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Category</Form.Label>
-                    <Form.Control type="text" name="category" value={formData.category} onChange={handleChange} required />
-                </Form.Group>
+                        {/* ✅ Category Dropdown */}
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Category</Form.Label>
+                            <Form.Control 
+                                as="select" 
+                                name="category" 
+                                value={formData.category} 
+                                onChange={handleChange} 
+                                required
+                            >
+                                <option value="">Select a category</option>
+                                {categories.map((category) => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Image</Form.Label>
-                    <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
-                </Form.Group>
-
-                <Button type="submit" className="mt-3">Create Recipe</Button>
-            </Form>
+                        <Button type="submit" className={styles.updateButton}>
+                            Create Recipe
+                        </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
         </Container>
     );
 };

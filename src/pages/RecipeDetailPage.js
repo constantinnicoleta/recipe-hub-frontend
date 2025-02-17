@@ -29,7 +29,7 @@ const RecipeDetailPage = () => {
         if (!window.confirm("Are you sure you want to delete this recipe?")) return;
 
         try {
-            await axiosReq.delete(`/recipes/${id}/`);
+            await axiosReq.delete(`api/recipes/${id}/`);
             alert("Recipe deleted successfully!");
             history.push("/recipes");
         } catch (error) {
@@ -40,20 +40,27 @@ const RecipeDetailPage = () => {
     if (error) return <p className="text-danger">{error}</p>;
     if (!recipe) return <p>Loading...</p>;
 
+    const isAuthor = currentUser &&
+        recipe.author &&
+        (currentUser.username === recipe.author.username || currentUser.username === recipe.author);
+
     return (
         <Container className={styles.centeredContainer}>
             <Card className={styles.recipeCard}>
-                {recipe.image && <Card.Img variant="top" src={recipe.image} alt={recipe.title} />}
                 <Card.Body>
-                    <Card.Title>{recipe.title}</Card.Title>
+                    <Card.Title className={styles.recipeTitle}>{recipe.title}</Card.Title>
                     <Card.Text><strong>Description:</strong> {recipe.description}</Card.Text>
                     <Card.Text><strong>Ingredients:</strong> {recipe.ingredients}</Card.Text>
                     <Card.Text><strong>Instructions:</strong> {recipe.instructions}</Card.Text>
+                    <Card.Text><strong>Category:</strong> {recipe.category_name || "Uncategorized"}</Card.Text>
+                    <Card.Text><strong>Author:</strong> {recipe.author ? recipe.author.username || recipe.author : "Unknown"}</Card.Text>
+                    <Card.Text><strong>Created At:</strong> {new Date(recipe.created_at).toLocaleDateString()}</Card.Text>
+                    <Card.Text><strong>Last Updated:</strong> {new Date(recipe.updated_at).toLocaleDateString()}</Card.Text>
 
-                    {currentUser?.username?.toLowerCase() === recipe.author?.toLowerCase() && (
+                    {isAuthor && (
                         <div className={styles.buttonGroup}>
-                            <Button variant="warning" onClick={() => history.push(`/recipes/${id}/edit`)}>Edit</Button>
-                            <Button variant="danger" onClick={handleDelete}>Delete</Button>
+                            <Button className={styles.detailButton} onClick={() => history.push(`/recipes/${id}/edit`)}>Edit</Button>
+                            <Button className={styles.detailButton} onClick={handleDelete}>Delete</Button>
                         </div>
                     )}
                 </Card.Body>

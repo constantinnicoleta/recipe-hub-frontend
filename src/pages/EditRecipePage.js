@@ -2,31 +2,53 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { axiosReq } from "../api/axiosDefaults";
 import { useAuth } from "../context/AuthContext";
-import { Form, Button, Container, Alert } from "react-bootstrap";
+import { Form, Button, Container, Card, Alert } from "react-bootstrap";
+import styles from "../styles/EditRecipePage.module.css";
 
 const EditRecipePage = () => {
     const { id } = useParams();
     const history = useHistory();
     const currentUser = useAuth();
+    const [categories, setCategories] = useState([]); // ✅ Fetch categories from backend
 
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         ingredients: "",
         instructions: "",
-        category: "",
-        image: null,
+        category: "",  // ✅ Store selected category ID
     });
 
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [isAuthor, setIsAuthor] = useState(false);
 
+    // ✅ Fetch available categories
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axiosReq.get("/api/categories/");
+                setCategories(response.data);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
+    // ✅ Fetch recipe details
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
-                const response = await axiosReq.get(`api/recipes/${id}/`);
-                setFormData(response.data);
+                const response = await axiosReq.get(`/api/recipes/${id}/`);
+                setFormData({
+                    title: response.data.title || "",
+                    description: response.data.description || "",
+                    ingredients: response.data.ingredients || "",
+                    instructions: response.data.instructions || "",
+                    category: response.data.category || "",  // ✅ Store category ID
+                });
                 setIsAuthor(response.data.author === currentUser?.username);
             } catch (error) {
                 setError("Recipe not found or you do not have permission to edit.");
@@ -36,12 +58,9 @@ const EditRecipePage = () => {
         fetchRecipe();
     }, [id, currentUser]);
 
+    // ✅ Handle form changes
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
-    };
-
-    const handleFileChange = (event) => {
-        setFormData({ ...formData, image: event.target.files[0] });
     };
 
     const handleSubmit = async (event) => {
@@ -54,15 +73,8 @@ const EditRecipePage = () => {
             return;
         }
 
-        const formDataToSend = new FormData();
-        Object.keys(formData).forEach((key) => {
-            formDataToSend.append(key, formData[key]);
-        });
-
         try {
-            await axiosReq.patch(`/recipes/${id}/`, formDataToSend, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            await axiosReq.patch(`/api/recipes/${id}/`, formData);
             setSuccessMessage("Recipe updated successfully!");
             setTimeout(() => history.push(`/recipes/${id}`), 2000);
         } catch (error) {
@@ -71,29 +83,86 @@ const EditRecipePage = () => {
     };
 
     return (
-        <Container className="mt-4">
-            <h1>Edit Recipe</h1>
-            {successMessage && <Alert variant="success">{successMessage}</Alert>}
-            {error && <Alert variant="danger">{error}</Alert>}
+        <Container className={styles.centeredContainer}>
+            <Card className={styles.editCard}>
+                <Card.Body>
+                    <h2 className={styles.title}>Edit Recipe</h2>
+                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                    {error && <Alert variant="danger">{error}</Alert>}
 
-            <Form onSubmit={handleSubmit}>
-                <Form.Group>
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control type="text" name="title" value={formData.title} onChange={handleChange} required />
-                </Form.Group>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="title" 
+                                value={formData.title} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control type="text" name="description" value={formData.description} onChange={handleChange} required />
-                </Form.Group>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows={3} 
+                                name="description" 
+                                value={formData.description} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Image</Form.Label>
-                    <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
-                </Form.Group>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Ingredients</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows={4} 
+                                name="ingredients" 
+                                value={formData.ingredients} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
 
-                <Button type="submit" className="mt-3" disabled={!isAuthor}>Update Recipe</Button>
-            </Form>
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Instructions</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows={4} 
+                                name="instructions" 
+                                value={formData.instructions} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                        </Form.Group>
+
+                        {/* ✅ Category Dropdown */}
+                        <Form.Group className={styles.formGroup}>
+                            <Form.Label>Category</Form.Label>
+                            <Form.Control 
+                                as="select" 
+                                name="category" 
+                                value={formData.category} 
+                                onChange={handleChange} 
+                                required
+                            >
+                                <option value="">Select a category</option>
+                                {categories.map((category) => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+
+                        <Button type="submit" className={styles.updateButton} disabled={!isAuthor}>
+                            Update Recipe
+                        </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
         </Container>
     );
 };

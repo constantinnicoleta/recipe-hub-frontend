@@ -1,47 +1,71 @@
+/* Navbar Styling */
 .NavBar {
     background-color: #efb6e0;
-}
-
-.navbar-brand img {
-    height: 60px;
-}
-
-.NavLink {
-    padding: 5px;
-    color: #616161;
-    text-decoration: none;
-    transition: color ease-in-out 0.3s;
-}
-
-.NavLink:hover {
-    color: #ec8038;
-}
-
-.Active {
-    color: #ec950a;
-    font-weight: bold;
-}
-  
-.Active i {
-    color: #eba638;
-}
-
-.NavContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 10px 15px;
     width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
+/* Logo Styling */
+.NavLogo {
+    height: 25px;
+    max-width: 100%;
+}
+
+/* Ensure toggle button is visible */
+.NavToggle {
+    border: none;
+    background: none;
+    outline: none;
+    display: block;
+}
+
+/* Collapsible Menu */
+.NavCollapse {
+    background-color: #efb6e0; /* Same as navbar */
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* Navbar Items */
 .NavItems {
-    margin-left: auto;
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
     align-items: center;
+    justify-content: flex-end;
 }
 
-@media (min-width: 768px) {
-    .navbar-toggler {
-        display: none;
+/* Fix for content being covered */
+body {
+    padding-top: 50px; /* Adjusts for fixed navbar */
+}
+
+/* Mobile Styling */
+@media (max-width: 768px) {
+    .NavContainer {
+        flex-direction: column;
+        align-items: center;
+        padding-top: 10px;
+    }
+
+    .NavItems {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    .NavToggle {
+        display: block !important; /* Make sure the toggle is visible */
+    }
+
+    .NavCollapse {
+        display: block;
+        position: relative;
+        width: 100%;
     }
 }
