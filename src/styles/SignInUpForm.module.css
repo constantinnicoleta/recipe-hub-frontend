@@ -1,64 +1,74 @@
-.Content {
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  max-width: 400px;
-}
-
-.Header {
-  font-size: 1.8rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.Input {
-  font-size: 1rem;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.Button {
-  background-color: #2142b2;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 1rem;
-  border: none;
-}
-
-.Button:hover {
-  background-color: #0d3dab;
-}
-
-.Link {
-  font-size: 0.9rem;
-  color: #2142b2;
-  text-decoration: none;
-}
-
-.Link span {
-  font-weight: bold;
-}
-
-.Link:hover {
-  text-decoration: underline;
-  color: #0d3dab;
-}
-
 .FullHeightContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100%;
+  background-color: white;
+
+
+.FormColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 420px;
+  width: 100%;
+  padding: 30px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
 }
+
+.Header {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+
+.Input {
+  font-size: 1rem;
+  padding: 12px;
+  border: 2px solid #ff69b4;
+  border-radius: 25px;
+  width: 100%;
+  margin-bottom: 15px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.Input:focus {
+  border-color: #ff4f99;
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(255, 105, 180, 0.5);
+}
+
+.Alert {
+  font-size: 0.9rem;
+  color: white;
+  background-color: #28a745;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+
+.Link {
+  font-size: 1rem;
+  color: #ff69b4;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+  margin-top: 15px;
+}
+
+.Link:hover {
+  text-decoration: underline;
+  color: #ff4f99;
+}
+
 
 .SignUpRow {
   display: flex;
@@ -66,19 +76,7 @@
   align-items: center;
   width: 100%;
   max-width: 950px;
-}
-
-.FormColumn {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 400px;
-  width: 100%;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-right: 30px;
+  gap: 30px;
 }
 
 .FillerImage {
@@ -87,12 +85,15 @@
   max-height: 450px;
   object-fit: cover;
   border-radius: 10px;
+  margin-left: 15px;
 }
+
 
 @media (max-width: 768px) {
   .SignUpRow {
     flex-direction: column;
     align-items: center;
+    gap: 15px;
   }
 
   .FormColumn {
@@ -102,5 +103,6 @@
   .FillerImage {
     max-width: 100%;
     height: auto;
+    margin-left: 0; 
   }
 }

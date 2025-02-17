@@ -9,27 +9,27 @@ const NavBar = () => {
     const currentUser = useAuth();
     const setCurrentUser = useSetAuth();
     const history = useHistory();
-    const [expanded, setExpanded] = useState(false); // State to control navbar toggle
+    const [expanded, setExpanded] = useState(false);
 
     const handleLogout = async () => {
         setCurrentUser(null);
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         history.push("/signin");
-        setExpanded(false); // Close menu after logout
+        setExpanded(false);
     };
 
     return (
         <Navbar className={styles.NavBar} expand="md" fixed="top" expanded={expanded}>
             <Container className={styles.NavContainer}>
-                {/* Logo */}
+                {}
                 <NavLink to="/" className={styles.NavLogoContainer}>
                     <Navbar.Brand>
                         <img src={logo} alt="Recipe Hub" className={styles.NavLogo} />
                     </Navbar.Brand>
                 </NavLink>
 
-                {/* Toggle Button (Hamburger Menu) */}
+                {}
                 <Navbar.Toggle
                     aria-controls="basic-navbar-nav"
                     onClick={() => setExpanded(!expanded)}
@@ -40,7 +40,7 @@ const NavBar = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className={styles.NavItems} onClick={() => setExpanded(false)}>
                         <NavLink className={styles.NavLink} to="/">Home</NavLink>
-                        <NavLink className={styles.NavLink} to="/recipes">Recipes</NavLink>
+                        {currentUser && <NavLink className={styles.NavLink} to="/recipes">Recipes</NavLink>}
                         <NavLink className={styles.NavLink} to="/categories">Categories</NavLink>
 
                         {currentUser ? (

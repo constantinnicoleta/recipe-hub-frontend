@@ -3,7 +3,8 @@ import axios from "axios";
 import { Form, Alert, Button, Col, Row, Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import { useSetAuth } from "../../context/AuthContext";
-import styles from "../../styles/SignInUpForm.module.css";
+import styles from "../../styles/SignInForm.module.css";
+
 
 function LoginForm() {
     const setAuth = useSetAuth();
@@ -29,8 +30,10 @@ function LoginForm() {
                 headers: { Authorization: `Bearer ${data.access}` },
             });
 
-            setAuth(userResponse.data);
-            history.push("/dashboard");
+            if (data.access) {
+                setAuth(userResponse.data);
+                history.push("/dashboard");
+            }
         } catch (err) {
             setErrors(err.response?.data || {});
         }
@@ -41,9 +44,9 @@ function LoginForm() {
     };
 
     return (
-        <Container fluid className={`FullHeightContainer`}>
+        <Container fluid className={styles.FullHeightContainer}>
             <Row className="justify-content-center w-100">
-                <Col xs={12} sm={8} md={6} lg={4} className={`p-4 shadow-lg rounded bg-white ${styles.Content}`}>
+                <Col xs={12} sm={8} md={6} lg={4} className={styles.Content}>
                     <h1 className={styles.Header}>Sign In</h1>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="username">
@@ -57,7 +60,7 @@ function LoginForm() {
                                 className={styles.Input}
                             />
                         </Form.Group>
-                        {errors.username && <Alert variant="danger">{errors.username}</Alert>}
+                        {errors.username && <Alert variant="danger" className={styles.Alert}>{errors.username}</Alert>}
 
                         <Form.Group controlId="password">
                             <Form.Label>Password</Form.Label>
@@ -70,15 +73,15 @@ function LoginForm() {
                                 className={styles.Input}
                             />
                         </Form.Group>
-                        {errors.password && <Alert variant="danger">{errors.password}</Alert>}
+                        {errors.password && <Alert variant="danger" className={styles.Alert}>{errors.password}</Alert>}
 
-                        <Button type="submit" className={`w-100 mt-3 ${styles.Button}`}>
+                        <Button type="submit" className={styles.Button}>
                             Sign in
                         </Button>
                     </Form>
 
                     {errors.non_field_errors && (
-                        <Alert variant="danger" className="mt-3">
+                        <Alert variant="danger" className={styles.Alert}>
                             {errors.non_field_errors}
                         </Alert>
                     )}

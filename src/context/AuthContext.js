@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("user");
+        axios.defaults.headers.common["Authorization"] = null;
     }, []);
 
     const refreshToken = useCallback(async () => {
@@ -31,12 +32,20 @@ export const AuthProvider = ({ children }) => {
         try {
             const { data } = await axios.post("/auth/token/refresh/", { refresh });
 
+            if (!data.access) {
+                throw new Error("No access token returned");
+            }
+
             localStorage.setItem("access_token", data.access);
             axios.defaults.headers.common["Authorization"] = `Bearer ${data.access}`;
 
             const userResponse = await axios.get("/auth/user/", {
                 headers: { Authorization: `Bearer ${data.access}` },
             });
+
+            if (!userResponse.data) {
+                throw new Error("Invalid user data");
+            }
 
             setAuth(userResponse.data);
             localStorage.setItem("user", JSON.stringify(userResponse.data));
@@ -52,8 +61,10 @@ export const AuthProvider = ({ children }) => {
 
         if (accessToken) {
             refreshToken();
+        } else {
+            logoutUser();
         }
-    }, [refreshToken]);
+    }, [refreshToken, logoutUser]);
 
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(

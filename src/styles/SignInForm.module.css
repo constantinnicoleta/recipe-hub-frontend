@@ -1,0 +1,100 @@
+/* Full page background */
+.FullHeightContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(135deg, #ffdde1, #ff69b4);
+  }
+  
+  /* Centered form box */
+  .Content {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Title */
+  .Header {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Input fields */
+  .Input {
+    font-size: 1rem;
+    padding: 12px;
+    border: 2px solid #ff69b4;
+    border-radius: 25px;
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .Input:focus {
+    border-color: #ff4f99;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(255, 105, 180, 0.5);
+  }
+  
+  /* Sign-in Button */
+  .Button {
+    background-color: #ff69b4;
+    color: white;
+    padding: 12px;
+    border-radius: 30px;
+    font-size: 1rem;
+    border: none;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease;
+    width: 100%;
+  }
+  
+  .Button:hover {
+    background-color: #ff4f99;
+    transform: scale(1.05);
+  }
+  
+  /* Error message box */
+  .Alert {
+    font-size: 0.9rem;
+    color: white;
+    background-color: #ff4f99;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  /* Sign-up link */
+  .Link {
+    font-size: 1rem;
+    color: #ff69b4;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+  }
+  
+  .Link:hover {
+    text-decoration: underline;
+    color: #ff4f99;
+  }
+  
+  /* Responsive fixes */
+  @media (max-width: 768px) {
+    .Content {
+      padding: 20px;
+    }
+  
+    .Header {
+      font-size: 1.8rem;
+    }
+  }

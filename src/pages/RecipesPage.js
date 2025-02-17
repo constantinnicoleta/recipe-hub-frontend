@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosReq } from "../api/axiosDefaults";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Redirect } from "react-router-dom";
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import styles from "../styles/RecipesPage.module.css";
@@ -27,7 +27,6 @@ const RecipesPage = () => {
         }
     }, [currentUser]);
 
-
     const handleDelete = async (recipeId) => {
         if (!window.confirm("Are you sure you want to delete this recipe?")) return;
 
@@ -41,7 +40,7 @@ const RecipesPage = () => {
         }
     };
 
-    return (
+    return currentUser ? (
         <Container className={styles.centeredContainer}>
             <h1 className={styles.pageTitle}>My Recipes</h1>
 
@@ -90,6 +89,8 @@ const RecipesPage = () => {
                 </Row>
             )}
         </Container>
+    ) : (
+        <Redirect to="/signin" />
     );
 };
 
