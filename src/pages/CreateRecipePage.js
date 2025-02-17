@@ -5,8 +5,12 @@ import { useAuth } from "../context/AuthContext";
 import { Form, Button, Container, Card, Alert } from "react-bootstrap";
 import styles from "../styles/EditRecipePage.module.css";
 
+/* 
+   CreateRecipePage allows authenticated users to create new recipes.
+   It fetches available categories and submits the recipe data to the API.
+*/
 const CreateRecipePage = () => {
-    const currentUser = useAuth();
+    const currentUser = useAuth(); // Retrieves the authenticated user
     const history = useHistory();
     const [categories, setCategories] = useState([]);
 
@@ -21,12 +25,14 @@ const CreateRecipePage = () => {
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
+    /* Redirects unauthenticated users to the sign-in page. */
     useEffect(() => {
         if (!currentUser) {
             history.push("/signin");
         }
     }, [currentUser, history]);
 
+    /* Fetches recipe categories from the API. */
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -40,6 +46,7 @@ const CreateRecipePage = () => {
         fetchCategories();
     }, []);
 
+    /* Updates form state as the user inputs data. */
     const handleChange = (event) => {
         const { name, value } = event.target;
         
@@ -50,6 +57,7 @@ const CreateRecipePage = () => {
         }
     };
 
+    /* Submits the recipe form to the API and handles success or error messages. */
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError(null);
@@ -71,7 +79,7 @@ const CreateRecipePage = () => {
 
     return (
         <Container className={styles.centeredContainer}> 
-            <Card className={styles.editCard}> {}
+            <Card className={styles.editCard}> 
                 <Card.Body>
                     <h2 className={styles.title}>Create New Recipe</h2>
                     {successMessage && <Alert variant="success">{successMessage}</Alert>}
@@ -125,7 +133,7 @@ const CreateRecipePage = () => {
                             />
                         </Form.Group>
 
-                        {}
+                        {/* Category Selection */}
                         <Form.Group className={styles.formGroup}>
                             <Form.Label>Category</Form.Label>
                             <Form.Control 

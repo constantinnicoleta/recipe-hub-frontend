@@ -21,13 +21,24 @@ const FeedPage = () => {
 
         const fetchFeed = async () => {
             try {
-                const response = await axiosRes.get("/api/feed/");
+                const token = localStorage.getItem("access_token"); // Get token
+                if (!token) {
+                    setError("Authentication error. Please log in again.");
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await axiosRes.get("/api/feed/", {
+                    headers: { Authorization: `Bearer ${token}` }, // Attach JWT token
+                });
+
                 if (isMounted) {
+                    console.log("Feed response:", response.data); // Debugging log
                     setFeed(response.data);
                     setLoading(false);
                 }
             } catch (error) {
-                console.error("Error fetching feed:", error);
+                console.error("Error fetching feed:", error.response ? error.response.data : error.message);
                 if (isMounted) {
                     setError("Failed to load feed.");
                     setLoading(false);
@@ -70,17 +81,6 @@ const FeedPage = () => {
                                     <a href={`/recipes/${item.data.id}`} className={styles.RecipeLink}>
                                         {item.data.title}
                                     </a>
-                                </>
-                            )}
-                            {item.type === "like" && (
-                                <>
-                                    <strong>{item.data.author}</strong> liked a recipe.
-                                </>
-                            )}
-                            {item.type === "comment" && (
-                                <>
-                                    <strong>{item.data.author}</strong> commented:{" "}
-                                    <em>"{item.data.content}"</em>
                                 </>
                             )}
                         </Card.Body>

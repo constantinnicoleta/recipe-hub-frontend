@@ -19,6 +19,7 @@ const RecipesPage = () => {
     const fetchRecipes = useCallback(async () => {
         try {
             const response = await axiosReq.get(`/api/recipes/?author=${currentUser?.username}`);
+            console.log("Fetched Recipes:", response.data); 
             setRecipes(response.data);
         } catch (error) {
             console.error("Error fetching recipes:", error);
@@ -63,12 +64,18 @@ const RecipesPage = () => {
                         <Col key={recipe.id} md={6} lg={4} className="mb-4">
                             <Card className={styles.recipeCard}>
                                 <Card.Body>
-                                    <Card.Title className={styles.recipeTitle}>{recipe.title}</Card.Title>
-                                    <Card.Text className={styles.recipeDescription}>{recipe.description}</Card.Text>
+                                    <Card.Title className={styles.recipeTitle}>
+                                        {recipe.title}
+                                    </Card.Title>
+                                    <Card.Text className={styles.recipeDescription}>
+                                        {recipe.description}
+                                    </Card.Text>
 
                                     <div className={styles.buttonGroup}>
                                         <Link to={`/recipes/${recipe.id}`}>
-                                            <Button variant="primary" className={styles.recipeButton}>View</Button>
+                                            <Button variant="primary" className={styles.recipeButton}>
+                                                View
+                                            </Button>
                                         </Link>
                                         <Button
                                             variant="warning"

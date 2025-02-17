@@ -5,6 +5,10 @@ import { Alert, Form, Button, Container, Row, Col, Image } from "react-bootstrap
 import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
 
+/* 
+   SignUpForm handles user registration, submits signup data to the API, 
+   and redirects to the login page upon success.
+*/
 const SignUpForm = () => {
     const [signupData, setSignupData] = useState({
         username: "",
@@ -16,6 +20,7 @@ const SignUpForm = () => {
     const [successMessage, setSuccessMessage] = useState("");
     const history = useHistory();
 
+    /* Updates form state as the user inputs data. */
     const handleChange = (event) => {
         setSignupData({
             ...signupData,
@@ -23,6 +28,7 @@ const SignUpForm = () => {
         });
     };
 
+    /* Submits the signup form, handles API response, and manages errors. */
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError("");
@@ -49,7 +55,7 @@ const SignUpForm = () => {
     return (
         <Container className={styles.FullHeightContainer}>
             <Row className={styles.SignUpRow}>
-                {}
+                {/* Signup Form Column */}
                 <Col xs={12} sm={8} md={6} lg={5} className={styles.FormColumn}>
                     <h1 className={styles.Header}>Sign up</h1>
 
@@ -112,7 +118,7 @@ const SignUpForm = () => {
                     </div>
                 </Col>
 
-                {}
+                {/* Visual Placeholder Column */}
                 <Col md={6} lg={5} className="d-none d-md-flex justify-content-center">
                     <Image
                         className={`img-fluid ${styles.FillerImage}`}

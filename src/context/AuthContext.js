@@ -4,24 +4,30 @@ import axios from "axios";
 const AuthContext = createContext();
 const SetAuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
-export const useSetAuth = () => useContext(SetAuthContext);
+export const useAuth = () => useContext(AuthContext); // Provides user authentication state
+export const useSetAuth = () => useContext(SetAuthContext); // Provides function to update auth state
 
+/* 
+   AuthProvider manages authentication state, token refresh, 
+   and user session persistence using localStorage.
+*/
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState(() => {
         const storedUser = localStorage.getItem("user");
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
+    /* Logs out the user by clearing authentication data and refreshing the page. */
     const logoutUser = useCallback(() => {
-      setAuth(null);
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("user");
-      axios.defaults.headers.common["Authorization"] = null;
-      window.location.reload();
-  }, []);
+        setAuth(null);
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("user");
+        axios.defaults.headers.common["Authorization"] = null;
+        window.location.reload();
+    }, []);
 
+    /* Refreshes the access token using the stored refresh token. */
     const refreshToken = useCallback(async () => {
         const refresh = localStorage.getItem("refresh_token");
 
@@ -57,14 +63,16 @@ export const AuthProvider = ({ children }) => {
         }
     }, [logoutUser]);
 
+    /* Automatically refreshes token on mount if an access token exists but no auth state. */
     useEffect(() => {
-      const accessToken = localStorage.getItem("access_token");
-    
-      if (accessToken && !auth) { 
-        refreshToken();
-      }
+        const accessToken = localStorage.getItem("access_token");
+
+        if (accessToken && !auth) { 
+            refreshToken();
+        }
     }, [auth, refreshToken]);
 
+    /* Attaches access token to outgoing requests if available. */
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(
             (config) => {

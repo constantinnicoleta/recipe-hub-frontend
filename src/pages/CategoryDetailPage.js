@@ -4,22 +4,27 @@ import { useParams, Link } from "react-router-dom";
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
 import styles from "../styles/CategoryDetailPage.module.css";
 
+/* 
+   CategoryDetailPage fetches and displays all recipes within a specific category.
+   It retrieves category details and associated recipes using the category ID.
+*/
 const CategoryDetailPage = () => {
-    const { id } = useParams();
+    const { id } = useParams(); // Extracts category ID from URL
     const [recipes, setRecipes] = useState([]);
     const [categoryName, setCategoryName] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    /* Fetches category details and recipes when the component mounts. */
     useEffect(() => {
         let isMounted = true;
 
         const fetchCategoryDetails = async () => {
             try {
-                const categoryResponse = await axiosReq.get(`/api/categories/${id}/`);
+                const categoryResponse = await axiosReq.get(`api/categories/${id}/`);
                 if (isMounted) setCategoryName(categoryResponse.data.name);
 
-                const recipeResponse = await axiosReq.get(`/api/recipes/?category=${id}`);
+                const recipeResponse = await axiosReq.get(`api/recipes/?category=${id}`);
                 if (isMounted) setRecipes(recipeResponse.data);
             } catch (error) {
                 if (isMounted) {

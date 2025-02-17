@@ -4,12 +4,14 @@ import { Button } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import styles from "../styles/Button.module.css";
 
+/* FollowButton component allows authenticated users to follow or unfollow another user. */
 const FollowButton = ({ userId }) => {
-    const currentUser = useAuth();
+    const currentUser = useAuth(); // Retrieves the authenticated user
     const [isFollowing, setIsFollowing] = useState(false);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        /* Checks if the current user is already following the given user. */
         const checkFollowingStatus = async () => {
             if (!currentUser) return;
 
@@ -28,6 +30,7 @@ const FollowButton = ({ userId }) => {
         checkFollowingStatus();
     }, [userId, currentUser]);
 
+    /* Toggles follow/unfollow state by sending a request to the API. */
     const toggleFollow = async () => {
         if (!currentUser) {
             alert("You need to be logged in to follow users!");

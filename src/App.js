@@ -19,7 +19,6 @@ import FeedPage from "./pages/FeedPage";
 function App() {
   const setCurrentUser = useSetAuth();
 
-  
   const verifyUser = useCallback(async () => {
     const accessToken = localStorage.getItem("access_token");
     if (!accessToken) return;
@@ -50,7 +49,7 @@ function App() {
               <Route exact path="/" component={FeedPage} />
               <Route exact path="/recipes" component={RecipesPage} />
               <Route path="/recipes/create" component={CreateRecipePage} />
-              <Route exact path="/recipes/:id" component={RecipeDetailPage} />
+              <Route exact path="/recipes/:recipeId" component={RecipeDetailPage} />
               <Route exact path="/recipes/:id/edit" component={EditRecipePage} />
               <Route exact path="/categories" component={CategoriesPage} />
               <Route exact path="/users" component={UsersListPage} /> 

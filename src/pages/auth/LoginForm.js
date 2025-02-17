@@ -5,14 +5,18 @@ import { Link, useHistory } from "react-router-dom";
 import { useSetAuth } from "../../context/AuthContext";
 import styles from "../../styles/SignInForm.module.css";
 
-
+/* 
+   LoginForm handles user authentication by submitting login credentials,
+   storing access tokens, and updating authentication state.
+*/
 function LoginForm() {
-    const setAuth = useSetAuth();
+    const setAuth = useSetAuth(); // Function to update authentication state
     const [loginData, setLoginData] = useState({ username: "", password: "" });
     const { username, password } = loginData;
     const [errors, setErrors] = useState({});
     const history = useHistory();
 
+    /* Handles login form submission, authenticating the user and storing tokens. */
     const handleSubmit = async (event) => {
         event.preventDefault();
         setErrors({});
@@ -39,6 +43,7 @@ function LoginForm() {
         }
     };
 
+    /* Updates form state as the user types. */
     const handleChange = (event) => {
         setLoginData({ ...loginData, [event.target.name]: event.target.value });
     };

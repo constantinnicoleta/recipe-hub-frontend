@@ -56,10 +56,13 @@
   
     .pageTitle {
       font-size: 1.6rem; 
-  
+    }
+
     .FeedCard {
       padding: 10px;
-      font-size: 0.9rem; 
+     font-size: 0.9rem; 
+    }
+
   
     .Message {
       font-size: 1rem;

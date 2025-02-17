@@ -4,9 +4,14 @@ import { Link } from "react-router-dom";
 import { Container, Card, Row, Col } from "react-bootstrap";
 import styles from "../styles/CategoriesPage.module.css";
 
+/* 
+   CategoriesPage fetches and displays all recipe categories, 
+   allowing users to navigate to category-specific recipes.
+*/
 const CategoriesPage = () => {
     const [categories, setCategories] = useState([]);
 
+    /* Fetches categories from the API on component mount. */
     useEffect(() => {
         const fetchCategories = async () => {
             try {
