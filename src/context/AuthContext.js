@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    // Function to log out user and clear localStorage
     const logoutUser = useCallback(() => {
         setAuth(null);
         localStorage.removeItem("access_token");
@@ -21,7 +20,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
     }, []);
 
-    // Function to refresh token and check user authentication
     const refreshToken = useCallback(async () => {
         const refresh = localStorage.getItem("refresh_token");
 

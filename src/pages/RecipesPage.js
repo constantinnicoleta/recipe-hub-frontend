@@ -14,7 +14,6 @@ const RecipesPage = () => {
         const fetchMyRecipes = async () => {
             try {
                 if (currentUser) {
-                    // ✅ Fetch only recipes created by logged-in user
                     const response = await axiosReq.get(`/api/recipes/?author=${currentUser.username}`);
                     setRecipes(response.data);
                 }
@@ -28,13 +27,13 @@ const RecipesPage = () => {
         }
     }, [currentUser]);
 
-    // ✅ Function to delete a recipe
+
     const handleDelete = async (recipeId) => {
         if (!window.confirm("Are you sure you want to delete this recipe?")) return;
 
         try {
             await axiosReq.delete(`/api/recipes/${recipeId}/`);
-            // ✅ Remove the deleted recipe from state without refresh
+
             setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== recipeId));
         } catch (error) {
             console.error("Error deleting recipe:", error);

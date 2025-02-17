@@ -9,21 +9,20 @@ const EditRecipePage = () => {
     const { id } = useParams();
     const history = useHistory();
     const currentUser = useAuth();
-    const [categories, setCategories] = useState([]); // ✅ Fetch categories from backend
+    const [categories, setCategories] = useState([]);
 
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         ingredients: "",
         instructions: "",
-        category: "",  // ✅ Store selected category ID
+        category: "",
     });
 
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [isAuthor, setIsAuthor] = useState(false);
 
-    // ✅ Fetch available categories
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -37,7 +36,6 @@ const EditRecipePage = () => {
         fetchCategories();
     }, []);
 
-    // ✅ Fetch recipe details
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
@@ -47,7 +45,7 @@ const EditRecipePage = () => {
                     description: response.data.description || "",
                     ingredients: response.data.ingredients || "",
                     instructions: response.data.instructions || "",
-                    category: response.data.category || "",  // ✅ Store category ID
+                    category: response.data.category || "",
                 });
                 setIsAuthor(response.data.author === currentUser?.username);
             } catch (error) {
@@ -58,7 +56,6 @@ const EditRecipePage = () => {
         fetchRecipe();
     }, [id, currentUser]);
 
-    // ✅ Handle form changes
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
@@ -138,7 +135,7 @@ const EditRecipePage = () => {
                             />
                         </Form.Group>
 
-                        {/* ✅ Category Dropdown */}
+                        {}
                         <Form.Group className={styles.formGroup}>
                             <Form.Label>Category</Form.Label>
                             <Form.Control 

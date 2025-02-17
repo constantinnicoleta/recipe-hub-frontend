@@ -3,32 +3,30 @@ import { useHistory } from "react-router-dom";
 import { axiosReq } from "../api/axiosDefaults";
 import { useAuth } from "../context/AuthContext";
 import { Form, Button, Container, Card, Alert } from "react-bootstrap";
-import styles from "../styles/EditRecipePage.module.css"; // ✅ Keep same styling as Edit Recipe
+import styles from "../styles/EditRecipePage.module.css";
 
 const CreateRecipePage = () => {
     const currentUser = useAuth();
     const history = useHistory();
-    const [categories, setCategories] = useState([]); // ✅ Store available categories
+    const [categories, setCategories] = useState([]);
 
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         ingredients: "",
         instructions: "",
-        category: "", // ✅ Stores selected category
+        category: "",
     });
 
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
-    // ✅ Redirect unauthenticated users
     useEffect(() => {
         if (!currentUser) {
             history.push("/signin");
         }
     }, [currentUser, history]);
 
-    // ✅ Fetch available categories
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -46,7 +44,7 @@ const CreateRecipePage = () => {
         const { name, value } = event.target;
         
         if (name === "category") {
-            setFormData({ ...formData, [name]: Number(value) }); // 🔥 Ensure category is an ID
+            setFormData({ ...formData, [name]: Number(value) });
         } else {
             setFormData({ ...formData, [name]: value });
         }
@@ -60,12 +58,12 @@ const CreateRecipePage = () => {
         try {
             const formDataToSend = {
                 ...formData,
-                category: parseInt(formData.category),  // ✅ Ensure category is sent as an ID
+                category: parseInt(formData.category),
             };
     
             await axiosReq.post("/api/recipes/", formDataToSend);
             setSuccessMessage("Recipe created successfully!");
-            setTimeout(() => history.push("/recipes"), 2000); // ✅ Redirect to all recipes
+            setTimeout(() => history.push("/recipes"), 2000);
         } catch (error) {
             setError("Failed to create recipe. Please check your inputs.");
         }
@@ -73,7 +71,7 @@ const CreateRecipePage = () => {
 
     return (
         <Container className={styles.centeredContainer}> 
-            <Card className={styles.editCard}> {/* ✅ Using the same card style as Edit Recipe */}
+            <Card className={styles.editCard}> {}
                 <Card.Body>
                     <h2 className={styles.title}>Create New Recipe</h2>
                     {successMessage && <Alert variant="success">{successMessage}</Alert>}
@@ -127,7 +125,7 @@ const CreateRecipePage = () => {
                             />
                         </Form.Group>
 
-                        {/* ✅ Category Dropdown */}
+                        {}
                         <Form.Group className={styles.formGroup}>
                             <Form.Label>Category</Form.Label>
                             <Form.Control 
