@@ -50,6 +50,7 @@
     color: white;
     border-radius: 10px;
     text-decoration: none;
+    font-weight: bold;
 }
 
 .recipeLink:hover {

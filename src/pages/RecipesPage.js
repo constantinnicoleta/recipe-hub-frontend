@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { axiosReq } from "../api/axiosDefaults";
 import { Link, useHistory, Redirect } from "react-router-dom";
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
@@ -11,28 +11,31 @@ const RecipesPage = () => {
     const history = useHistory();
 
     useEffect(() => {
-        const fetchMyRecipes = async () => {
-            try {
-                if (currentUser) {
-                    const response = await axiosReq.get(`/api/recipes/?author=${currentUser.username}`);
-                    setRecipes(response.data);
-                }
-            } catch (error) {
-                console.error("Error fetching my recipes:", error);
-            }
-        };
+        if (!currentUser) {
+            history.push("/signin");
+        }
+    }, [currentUser, history]);
 
-        if (currentUser) {
-            fetchMyRecipes();
+    const fetchRecipes = useCallback(async () => {
+        try {
+            const response = await axiosReq.get(`/api/recipes/?author=${currentUser?.username}`);
+            setRecipes(response.data);
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
         }
     }, [currentUser]);
+
+    useEffect(() => {
+        if (currentUser) {
+            fetchRecipes();
+        }
+    }, [fetchRecipes, currentUser]);
 
     const handleDelete = async (recipeId) => {
         if (!window.confirm("Are you sure you want to delete this recipe?")) return;
 
         try {
             await axiosReq.delete(`/api/recipes/${recipeId}/`);
-
             setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== recipeId));
         } catch (error) {
             console.error("Error deleting recipe:", error);
@@ -67,14 +70,14 @@ const RecipesPage = () => {
                                         <Link to={`/recipes/${recipe.id}`}>
                                             <Button variant="primary" className={styles.recipeButton}>View</Button>
                                         </Link>
-                                        <Button 
+                                        <Button
                                             variant="warning"
                                             className={styles.recipeButton}
                                             onClick={() => history.push(`/recipes/${recipe.id}/edit`)}
                                         >
                                             Edit
                                         </Button>
-                                        <Button 
+                                        <Button
                                             variant="danger"
                                             className={styles.recipeButton}
                                             onClick={() => handleDelete(recipe.id)}

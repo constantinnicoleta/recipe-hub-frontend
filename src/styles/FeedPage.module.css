@@ -27,7 +27,7 @@
     transition: transform 0.2s ease-in-out;
 }
   
-  /* Hover effect on larger screens only */
+  
 @media (min-width: 768px) {
     .FeedCard:hover {
       transform: scale(1.02);
@@ -35,7 +35,7 @@
 }
   
 .FeedCard strong {
-    color: #d24aff; /* Match your theme */
+    color: #d24aff;
 }
   
 .FeedCard em {
@@ -48,22 +48,20 @@
     margin-top: 20px;
 }
   
-  /* 🔹 Mobile Styles */
+
 @media (max-width: 768px) {
     .FeedContainer {
-      padding: 10px; /* Reduce padding for smaller screens */
+      padding: 10px; 
     }
   
     .pageTitle {
-      font-size: 1.6rem; /* Slightly smaller title */
-    }
+      font-size: 1.6rem; 
   
     .FeedCard {
-      padding: 10px; /* Reduce padding inside cards */
-      font-size: 0.9rem; /* Reduce text size */
-    }
+      padding: 10px;
+      font-size: 0.9rem; 
   
     .Message {
-      font-size: 1rem; /* Adjust message size */
+      font-size: 1rem;
     }
 }

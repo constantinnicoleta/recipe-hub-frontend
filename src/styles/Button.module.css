@@ -58,10 +58,10 @@
   }
   
   .Bright {
-    background-color: #ff69b4; /* PINK */
+    background-color: #ff69b4;
     color: white;
 }
 
 .Bright:hover {
-    background-color: #ff4f99; /* Slightly darker pink */
+    background-color: #ff4f99;
 }

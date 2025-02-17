@@ -36,7 +36,7 @@ const NavBar = () => {
                     className={styles.NavToggle}
                 />
 
-                {/* Collapsible Menu */}
+                {}
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className={styles.NavItems} onClick={() => setExpanded(false)}>
                         <NavLink className={styles.NavLink} to="/">Feed</NavLink>
@@ -45,6 +45,7 @@ const NavBar = () => {
 
                         {currentUser ? (
                             <>
+                                <NavLink className={styles.NavLink} to="/users">Find Users</NavLink>
                                 <span className={styles.NavLink}>
                                     Welcome, {currentUser.username || "User"}
                                 </span>
@@ -53,7 +54,7 @@ const NavBar = () => {
                                 </button>
                             </>
                         ) : (
-                            <>
+                            <>   
                                 <NavLink className={styles.NavLink} to="/signin">Sign in</NavLink>
                                 <NavLink className={styles.NavLink} to="/signup">Sign up</NavLink>
                             </>

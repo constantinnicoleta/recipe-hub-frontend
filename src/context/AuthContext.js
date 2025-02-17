@@ -14,12 +14,13 @@ export const AuthProvider = ({ children }) => {
     });
 
     const logoutUser = useCallback(() => {
-        setAuth(null);
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("user");
-        axios.defaults.headers.common["Authorization"] = null;
-    }, []);
+      setAuth(null);
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user");
+      axios.defaults.headers.common["Authorization"] = null;
+      window.location.reload();
+  }, []);
 
     const refreshToken = useCallback(async () => {
         const refresh = localStorage.getItem("refresh_token");
@@ -57,14 +58,12 @@ export const AuthProvider = ({ children }) => {
     }, [logoutUser]);
 
     useEffect(() => {
-        const accessToken = localStorage.getItem("access_token");
-
-        if (accessToken) {
-            refreshToken();
-        } else {
-            logoutUser();
-        }
-    }, [refreshToken, logoutUser]);
+      const accessToken = localStorage.getItem("access_token");
+    
+      if (accessToken && !auth) { 
+        refreshToken();
+      }
+    }, [auth, refreshToken]);
 
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(

@@ -1,53 +1,85 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
 import { axiosReq } from "../api/axiosDefaults";
-import { Container, Card, Row, Col } from "react-bootstrap";
+import { useParams, Link } from "react-router-dom";
+import { Container, Card, Button, Row, Col } from "react-bootstrap";
 import styles from "../styles/CategoryDetailPage.module.css";
 
 const CategoryDetailPage = () => {
     const { id } = useParams();
-    const [category, setCategory] = useState(null);
     const [recipes, setRecipes] = useState([]);
+    const [categoryName, setCategoryName] = useState("");
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchCategoryAndRecipes = async () => {
+        let isMounted = true;
+
+        const fetchCategoryDetails = async () => {
             try {
                 const categoryResponse = await axiosReq.get(`/api/categories/${id}/`);
-                setCategory(categoryResponse.data);
+                if (isMounted) setCategoryName(categoryResponse.data.name);
 
-                const recipesResponse = await axiosReq.get(`/api/recipes/?category_name=${categoryResponse.data.name}`);
-                setRecipes(recipesResponse.data);
+                const recipeResponse = await axiosReq.get(`/api/recipes/?category=${id}`);
+                if (isMounted) setRecipes(recipeResponse.data);
             } catch (error) {
-                console.error("Error fetching category or recipes:", error);
+                if (isMounted) {
+                    console.error("Error fetching category details:", error);
+                    setError("Failed to load category.");
+                }
+            } finally {
+                if (isMounted) setLoading(false);
             }
         };
 
-        fetchCategoryAndRecipes();
+        fetchCategoryDetails();
+
+        return () => {
+            isMounted = false;
+        };
     }, [id]);
+
+    if (loading) {
+        return (
+            <Container className={styles.centeredContainer}>
+                <h1 className={styles.pageTitle}>Loading...</h1>
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container className={styles.centeredContainer}>
+                <h1 className={styles.pageTitle}>{error}</h1>
+            </Container>
+        );
+    }
 
     return (
         <Container className={styles.centeredContainer}>
-            {category ? <h1 className={styles.pageTitle}>{category.name} Recipes</h1> : <p>Loading category...</p>}
+            <h1 className={styles.pageTitle}>{categoryName} Recipes</h1>
 
-            <Row className={styles.recipesContainer}>
-                {recipes.length === 0 ? (
-                    <p>No recipes found in this category.</p>
-                ) : (
-                    recipes.map((recipe) => (
+            {recipes.length === 0 ? (
+                <p className={styles.noRecipesText}>No recipes found in this category.</p>
+            ) : (
+                <Row className={styles.recipesContainer}>
+                    {recipes.map((recipe) => (
                         <Col key={recipe.id} md={6} lg={4} className="mb-4">
                             <Card className={styles.recipeCard}>
                                 <Card.Body>
                                     <Card.Title className={styles.recipeTitle}>{recipe.title}</Card.Title>
                                     <Card.Text className={styles.recipeDescription}>{recipe.description}</Card.Text>
-                                    <Link to={`/recipes/${recipe.id}`} className={styles.recipeLink}>
-                                        View Recipe
-                                    </Link>
+
+                                    <div className={styles.buttonGroup}>
+                                        <Button as={Link} to={`/recipes/${recipe.id}`} className={styles.recipeButton}>
+                                            View Recipe
+                                        </Button>
+                                    </div>
                                 </Card.Body>
                             </Card>
                         </Col>
-                    ))
-                )}
-            </Row>
+                    ))}
+                </Row>
+            )}
         </Container>
     );
 };

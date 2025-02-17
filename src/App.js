@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import styles from './App.module.css';
 import NavBar from './components/NavBar';
 import Container from 'react-bootstrap/Container';
@@ -12,34 +12,33 @@ import EditRecipePage from "./pages/EditRecipePage";
 import CreateRecipePage from "./pages/CreateRecipePage";
 import CategoriesPage from "./pages/CategoriesPage";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
+import UsersListPage from "./pages/UsersListPage";
 import { axiosRes } from "./api/axiosDefaults";
 import FeedPage from "./pages/FeedPage";
 
 function App() {
   const setCurrentUser = useSetAuth();
 
-  useEffect(() => {
-    const verifyUser = async () => {
-      const accessToken = localStorage.getItem("access_token");
+  
+  const verifyUser = useCallback(async () => {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) return;
 
-      if (!accessToken) {
-        return;
-      }
+    try {
+      const { data } = await axiosRes.get("/auth/user/", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
-      try {
-        const { data } = await axiosRes.get("/auth/user/", {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-
-        setCurrentUser(data);
-      } catch (error) {
-        console.error("Error checking user status:", error);
-        setCurrentUser(null);
-      }
-    };
-
-    verifyUser();
+      setCurrentUser(data);
+    } catch (error) {
+      console.error("Error checking user status:", error);
+      setCurrentUser(null);
+    }
   }, [setCurrentUser]);
+
+  useEffect(() => {
+    verifyUser();
+  }, [verifyUser]);
 
   return (
     <AuthProvider>
@@ -54,6 +53,7 @@ function App() {
               <Route exact path="/recipes/:id" component={RecipeDetailPage} />
               <Route exact path="/recipes/:id/edit" component={EditRecipePage} />
               <Route exact path="/categories" component={CategoriesPage} />
+              <Route exact path="/users" component={UsersListPage} /> 
               <Route exact path="/categories/:id" component={CategoryDetailPage} />
               <Route exact path="/signin" component={LoginForm} />
               <Route exact path="/signup" component={SignUpForm} />
