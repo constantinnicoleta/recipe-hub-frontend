@@ -39,7 +39,7 @@ const NavBar = () => {
                 {/* Collapsible Menu */}
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className={styles.NavItems} onClick={() => setExpanded(false)}>
-                        <NavLink className={styles.NavLink} to="/">Home</NavLink>
+                        <NavLink className={styles.NavLink} to="/">Feed</NavLink>
                         {currentUser && <NavLink className={styles.NavLink} to="/recipes">Recipes</NavLink>}
                         <NavLink className={styles.NavLink} to="/categories">Categories</NavLink>
 

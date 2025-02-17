@@ -1,0 +1,69 @@
+.FeedContainer {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+  
+.pageTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+  
+.Message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+}
+  
+.FeedCard {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: transform 0.2s ease-in-out;
+}
+  
+  /* Hover effect on larger screens only */
+@media (min-width: 768px) {
+    .FeedCard:hover {
+      transform: scale(1.02);
+    }
+}
+  
+.FeedCard strong {
+    color: #d24aff; /* Match your theme */
+}
+  
+.FeedCard em {
+    color: #2142b2;
+}
+  
+.Loader {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+  
+  /* 🔹 Mobile Styles */
+@media (max-width: 768px) {
+    .FeedContainer {
+      padding: 10px; /* Reduce padding for smaller screens */
+    }
+  
+    .pageTitle {
+      font-size: 1.6rem; /* Slightly smaller title */
+    }
+  
+    .FeedCard {
+      padding: 10px; /* Reduce padding inside cards */
+      font-size: 0.9rem; /* Reduce text size */
+    }
+  
+    .Message {
+      font-size: 1rem; /* Adjust message size */
+    }
+}

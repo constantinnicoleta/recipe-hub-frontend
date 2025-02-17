@@ -32,7 +32,7 @@ function LoginForm() {
 
             if (data.access) {
                 setAuth(userResponse.data);
-                history.push("/dashboard");
+                history.push("/");
             }
         } catch (err) {
             setErrors(err.response?.data || {});

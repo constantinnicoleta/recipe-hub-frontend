@@ -4,10 +4,8 @@ import NavBar from './components/NavBar';
 import Container from 'react-bootstrap/Container';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { AuthProvider, useSetAuth } from './context/AuthContext';
-import HomePage from "./pages/HomePage";
 import LoginForm from "./pages/auth/LoginForm";
 import SignUpForm from "./pages/auth/SignUpForm";
-import DashboardPage from "./pages/DashboardPage";
 import RecipesPage from "./pages/RecipesPage";
 import RecipeDetailPage from "./pages/RecipeDetailPage";
 import EditRecipePage from "./pages/EditRecipePage";
@@ -15,6 +13,7 @@ import CreateRecipePage from "./pages/CreateRecipePage";
 import CategoriesPage from "./pages/CategoriesPage";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
 import { axiosRes } from "./api/axiosDefaults";
+import FeedPage from "./pages/FeedPage";
 
 function App() {
   const setCurrentUser = useSetAuth();
@@ -49,8 +48,7 @@ function App() {
           <NavBar />
           <Container className={styles.Main}>
             <Switch>
-              <Route exact path="/" component={HomePage} />
-              <Route exact path="/dashboard" component={DashboardPage} />
+              <Route exact path="/" component={FeedPage} />
               <Route exact path="/recipes" component={RecipesPage} />
               <Route path="/recipes/create" component={CreateRecipePage} />
               <Route exact path="/recipes/:id" component={RecipeDetailPage} />
